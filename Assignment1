@@ -1,0 +1,115 @@
+//Write a program to implement an address book with options given below: a) Create address book. b) View address book. c) Insert a record. d) Delete a record. e) Modify a record. f) Exit 
+
+#!/bin/bash
+while [[ $ch -lt 7 ]]; 
+do
+echo 1.Create
+echo 2.insert
+echo 3.display
+echo 4.delete
+echo 5.modify
+echo 6.search
+echo 7.exit
+echo enter your choice:
+read ch
+case $ch in
+1)
+echo "Enter the address book name"
+		# check the address book is their or not in current working directory
+		read fname
+		res='ls | grep $fname | wc -w'
+		if [[ -f "$fname" ]]
+		then
+				echo "Error: file is already existing!"
+		else
+				touch "$fname"
+				echo "address book created!"
+		fi	
+;;
+#Insert data into address book
+2)
+ if [ "$ch" == "2" ]
+                then
+                echo "enter name of database where data to be Inserted:"
+                read fname
+echo enter the name:
+read name
+echo enter email_id
+read email
+echo enter the pincode:
+read pin
+echo enter the housenumber:
+read hno
+		echo $name $email $pin $hno >> $fname
+echo data inserted in given file
+fi
+;;
+#Display data in database
+3)
+        if [ "$ch" == "3" ]
+                then
+                echo "enter name of database from where data to be display:"
+                read db
+                cat $db
+        fi
+;;
+#Delete data from database
+4)
+ echo enter the email to be deleted
+read email
+if grep $email $fname
+then
+grep -v $email $fname >> temp
+rm $fname
+mv temp $fname
+echo Record deleted
+fi
+;;
+5)
+ if [ "$ch" == "5" ]
+               then
+                echo "enter name of database:"
+                read db
+                echo "enter name:"
+                read name
+                echo "enter line u want to modify:"
+                read linenumber
+                for line in `grep -n "$name" "$db"`
+                do
+                number=`echo "$line" | cut -c1`
+                if [ "$number" == "$linenumber" ]
+                then
+                echo "what would u like to change"
+                echo "\"name,email,pin,hno\""
+                read edit
+                linechange="${linenumber}s"
+                sed -i -e "$linechange/.*/$edit/" $db
+                echo record edited   
+               fi
+               done
+        fi
+;;
+#Search data from database
+6)
+        if [ "$ch" == "6" ]
+                then
+                echo "enter name of database from where to search:"
+                read db
+                echo "enter email to be search:"
+                read em1
+                grep $em1 $db
+                echo "record found"
+                else
+                echo "not found"
+        fi
+;;
+#Exit
+7)
+echo exit
+;;
+
+*)
+echo you have inserted wrong choice
+;;
+esac
+done
